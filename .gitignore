@@ -1,0 +1,15 @@
+.idea
+npm-debug.log
+node_modules
+*.js.map
+*.DS_Store
+venv
+scraps.md
+assets/img/hotels
+assets/.sass-cache
+dist
+aot
+*.css.map
+*.pem
+*.scssc
+*.iml

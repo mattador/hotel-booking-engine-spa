@@ -1,0 +1,29 @@
+<form>
+    <input class="search-input" type="text" (focus)="show()" (keydown)="searchLocations(suggestInput.value, false, 'down')" (keyup)="searchLocations(suggestInput.value, false, 'up')" (keypress)="searchLocations(suggestInput.value, false, 'press')" #suggestInput
+           [(ngModel)]="criteria.location.searchTerm" [ngModelOptions]="{standalone: true}"
+           placeholder="Search by location..."/>
+</form>
+<div class="list" *ngIf="isOpen">
+    <div *ngIf="locations != null" class="suggestions">
+        <ul *ngIf="locations.areas.length > 0">
+            <li class="list-section">Locations</li>
+            <li *ngFor="let area of locations.areas" (click)="add(area, 'area')"
+                [class.active]="criteria.location.area_codes.indexOf(area.code) > -1">
+                {{area.name}}
+            </li>
+        </ul>
+        <div class="list-divider"></div>
+        <ul *ngIf="locations.hotels.length > 0">
+            <li class="list-section">Hotels</li>
+            <li *ngFor="let hotel of locations.hotels" (click)="add(hotel, 'hotel')"
+                [class.active]="criteria.location.hotel_codes.indexOf(hotel.code) > -1">
+                {{hotel.name}}
+                <span class="list-extra">{{hotel.region}}</span>
+            </li>
+        </ul>
+    </div>
+    <ul *ngIf="locations == null">
+        <li *ngIf="suggestInput.value.length == 0">Search by city, or property name.</li>
+        <li *ngIf="suggestInput.value.length > 0">No matches found.</li>
+    </ul>
+</div>

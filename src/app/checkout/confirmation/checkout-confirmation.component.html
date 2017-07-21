@@ -1,0 +1,46 @@
+<div class="checkout-confirmation">
+    <h3 class="thanks">Thanks for booking, {{reservation.first_name}}!</h3>
+    <p class="confirmation-code">Your confirmation number is
+        <!--<span class="code"
+              (click)="router.navigate(['/booking', confirmation.api_confirmation_code, reservation.last_name])">{{ confirmation.api_confirmation_code}}
+        </span>-->
+        <span class="code">{{ confirmation['api_confirmation_code'] }}</span>
+        <br/>
+        We have sent a confirmation to your email.
+    </p>
+    <div class="accordian">
+        <accordion [showArrows]="true">
+            <accordion-group heading="Information about your stay" [isOpened]="true">
+                <ul class="details">
+                    <li>{{reservation.hotel.name}}</li>
+                    <li>Address: {{reservation.hotel.address}}</li>
+                    <li>Room type: {{ reservation.hotelRoomRate.room_name}}</li>
+                    <li>
+                        Check in date: {{reservation.check_in | date:'mediumDate'}}
+                    </li>
+                    <li>
+                        Check out date: {{reservation.check_out | date:'mediumDate'}}
+                    </li>
+                    <li>Total stay: ${{reservation.hotelRoomRate.total}} {{reservation.hotelRoomRate.currency}} Incl.
+                        GST
+                    </li>
+                    <li>Guests: {{reservation.adult_count}}x adults
+                        <span *ngIf="reservation.child_count > 0">, {{reservation.child_count}}x children</span>
+                    </li>
+                    <li *ngIf="reservation.promotional_code != ''">Promo Code: {{reservation.promotional_code}}</li>
+                </ul>
+            </accordion-group>
+            <accordion-group heading="Booking Policy" [isOpened]="true">
+                <p>{{reservation.hotelRoomRate.cancel_policy}}</p>
+            </accordion-group>
+        </accordion>
+        <accordion *ngFor="let features of reservation.hotelRoomRate.room_description" [showArrows]="true">
+            <accordion-group heading="{{features.title}}" [isOpened]="true">
+                <div [innerHTML]="features.html"></div>
+            </accordion-group>
+        </accordion>
+    </div>
+    <p *ngIf="reservation.hotelRoomRate.room_images != undefined">
+        <hotel-images [images]="reservation.hotelRoomRate.room_images"></hotel-images>
+    </p>
+</div>

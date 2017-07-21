@@ -1,0 +1,39 @@
+<div class="filters-bar">
+    <div class="search-input" (click)="showFilters=true"><i class="fa fa-search"></i> {{ criteria.location.searchTerm }}</div>
+    <div class="edit" (click)="showFilters=true">
+        <i class="fa fa-calendar" aria-hidden="true"></i> {{ criteria.check_in | date:'MMM d' }} - {{ criteria.check_out | date:'MMM d' }} ({{ totalDays() }})
+        <i class="fa fa-user" aria-hidden="true"></i> {{ totalGuests() }}
+    </div>
+    <strong class="edit" (click)="showFilters=true">Enter Promo Code</strong>
+</div>
+<div class="filters" *ngIf="showFilters">
+    <ul class="breadcrump-top">
+        <li>
+            <div class="back" (click)="showFilters = false">
+                <img src="../../../../assets/img/back.png">Back
+            </div>
+        </li>
+        <li>
+            <img class="logo" src="../../../../assets/img/logo_simple.png">
+        </li>
+    </ul>
+    <ul>
+        <li>
+            <search-location (suggestOpen)="suggestOpenToggle($event)" [criteria]="criteria"></search-location>
+        </li>
+        <li>
+            <search-calendar [criteria]="criteria"></search-calendar>
+        </li>
+        <li>
+            <search-occupancy [criteria]="criteria"></search-occupancy>
+        </li>
+        <li class="promo-filter">
+            <label>Promo code</label>
+            <input [(ngModel)]="criteria.promotional_code" type="text" name="promotional_code"
+                   placeholder="Promo code">
+        </li>
+        <li>
+            <button (click)="performSearch()">Apply filter</button>
+        </li>
+    </ul>
+</div>

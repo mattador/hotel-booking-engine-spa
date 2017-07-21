@@ -1,0 +1,15 @@
+<div class="summary" (click)="showOccupancyOptions = true">
+    <span>{{ criteria.occupancy.room_count }}</span> Room <span>{{ criteria.occupancy.adult_count + criteria.occupancy.child_count }}</span> Guests
+</div>
+<div *ngIf="showOccupancyOptions" class="options">
+    <div class="adults">
+        <button (click)="removeAdult()"><i class="fa fa-minus"></i></button>
+        <span>{{criteria.occupancy.adult_count}}</span> Adults
+        <button (click)="addAdult()"><i class="fa fa-plus"></i></button>
+    </div>
+    <div class="children">
+        <button (click)="removeChild()"><i class="fa fa-minus"></i></button>
+        <span>{{criteria.occupancy.child_count}}</span> Children
+        <button (click)="addChild()"><i class="fa fa-plus"></i></button>
+    </div>
+</div>

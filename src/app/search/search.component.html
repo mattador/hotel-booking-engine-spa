@@ -1,0 +1,20 @@
+<top-navigator></top-navigator>
+<div class="logo">
+    <img src="../../../assets/img/logo_black.png">
+</div>
+<search-location (suggestOpen)="suggestOpenToggle($event)" [criteria]="criteria"></search-location>
+<div *ngIf="!suggestOpen">
+    <search-calendar [criteria]="criteria"></search-calendar>
+    <search-occupancy [criteria]="criteria"></search-occupancy>
+    <div class="book">
+        <span class="warning" *ngIf="warning">{{warning}}</span>
+        <button (click)="search()">Search</button>
+    </div>
+    <button class="subscription">
+        <a [routerLink]="['/subscribe']">Subscribe to <span>eClub</span></a>
+        <span class="promo-text">Receive 10%* off</span>
+    </button>
+    <button class="booking">
+        <a [routerLink]="['/booking']">Manage bookings</a>
+    </button>
+</div>

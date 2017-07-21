@@ -1,0 +1,66 @@
+<div [class.calendar-container]="calendarOpen">
+    <ul class="calendar-dates">
+        <li [class.active]="(calendarOpen && isCheckInTurn)" class="arrival" #check_in
+            (click)="interactCalendar('check_in')">
+            <div>
+                <span class="arrival-departure">Arrival: {{criteria.check_in.toString('dddd') }}</span>
+                <span *ngIf="calendarOpen && !isCheckInTurn" class="day inactive">
+                    {{criteria.check_in.toString('dd') }}
+                </span>
+                <span *ngIf="!calendarOpen || (calendarOpen && isCheckInTurn)" class="day">
+                    {{criteria.check_in.toString('dd') }}
+                </span>
+                <span class="month">{{criteria.check_in.toString('MMM') }}</span>
+                <span class="year">{{criteria.check_in.toString('yyyy') }}</span>
+            </div>
+        </li>
+        <li [class.active]="(calendarOpen && !isCheckInTurn)" (click)="interactCalendar('check_out')">
+            <div *ngIf="checkOut != null">
+                <span class="arrival-departure">Departure: {{criteria.check_out.toString('dddd') }}</span>
+                <span *ngIf="calendarOpen && isCheckInTurn" class="day inactive">
+                    {{criteria.check_out.toString('dd') }}
+                </span>
+                <span *ngIf="!calendarOpen || (calendarOpen && !isCheckInTurn)" class="day">
+                    {{criteria.check_out.toString('dd') }}
+                </span>
+                <span class="month">{{criteria.check_out.toString('MMM') }}</span>
+                <span class="year">{{criteria.check_out.toString('yyyy') }}</span>
+            </div>
+            <div *ngIf="checkOut == null">
+                <span class="arrival-departure active">Departure...</span>
+            </div>
+        </li>
+    </ul>
+    <div *ngIf="calendarOpen">
+        <div class="calendar-ctrl">
+            <div *ngIf="showWarning" class="max-range-warning">Reach out to us to reserve more than 30 days at a time:
+                <br/><i class="fa fa-phone" aria-hidden="true"></i>1300
+                886 886
+            </div>
+            <button [disabled]="disableOk" [class.disabled]="disableOk"
+                    (click)="closeCalendar()" class="confirm-calendar">OK ({{nights}} <span
+                    *ngIf="nights == 1">night</span><span *ngIf="nights != 1">nights</span>)
+            </button>
+        </div>
+        <div class="calendar">
+            <div *ngFor="let month of calendar" class="month">
+                <div class="month-name">{{months[month.m]}} <span class="year">{{month.y}}</span></div>
+                <ul (click)="dateClicked($event.target)" id="month__{{month.m+1}}">
+                    <li class="day">Su</li>
+                    <li class="day">Mo</li>
+                    <li class="day">Tu</li>
+                    <li class="day">We</li>
+                    <li class="day">Th</li>
+                    <li class="day">Fr</li>
+                    <li class="day">Sa</li>
+                    <li *ngFor="let day of month.d" class="day-number"
+                        [attr.data-date]="month.y+'-'+(month.m+1)+'-'+day[0]+'|'+day[1]"
+                        [class.day-number-inactive]="day[1]">
+                        {{day[0]}}
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>

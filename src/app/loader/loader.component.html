@@ -1,0 +1,12 @@
+<div>
+    <div class="loading-logo">
+        <img src="../../../assets/img/logo_white_text.png">
+    </div>
+    <i class="fa fa-spinner fa-spin fa-2x fa-fw" aria-hidden="true"></i>
+    <p *ngIf="loadingText != ''" [innerHTML]="loadingText"></p>
+    <ul *ngIf="loadingText != ''">
+        <li><i class="fa fa-wifi" aria-hidden="true"></i> Free WiFi</li>
+        <li><i class="fa fa-dollar" aria-hidden="true"></i> Best rate guarantee</li>
+        <li><i class="fa fa-check-square-o" aria-hidden="true"></i> Instant confirmation</li>
+    </ul>
+</div>

@@ -1,0 +1,154 @@
+<div [focus]="focus == 'top_focus'" class="reservation">
+    <ul class="breadcrump-top">
+        <li>
+            <div class="back" (click)="prevPage()">
+                <img src="../../../assets/img/back.png">Back
+            </div>
+        </li>
+        <li>
+            <img class="logo" src="../../../assets/img/logo_simple.png">
+        </li>
+    </ul>
+    <div *ngIf="!loader">
+        <ul class="status-breadcrumb">
+            <li [class.active]="confirmation == undefined">
+                Guest Details
+            </li>
+            <li [class.active]="confirmation != undefined">
+                Confirmation
+            </li>
+        </ul>
+        <ul *ngIf="modifyReservation && confirmation == undefined" class="details light-grey">
+            <li><strong>Your previous reservation:</strong></li>
+            <li class="hotel-name">{{modifyReservation.name}}</li>
+            <li>Room type: {{ modifyReservation.room_type_name}}</li>
+            <li>Check-in: {{modifyReservation.check_in | date:'mediumDate'}}</li>
+            <li>Check-out: {{modifyReservation.check_out | date:'mediumDate'}}</li>
+            <li>Total price: <strong>${{modifyReservation.total}} {{modifyReservation.currency}}</strong> Incl. GST</li>
+            <li>Guests: {{modifyReservation.adult_count}}x adult<span *ngIf="modifyReservation.adult_count > 1">s</span>
+                <span *ngIf="modifyReservation.child_count > 0">, {{modifyReservation.child_count}}x children</span>
+            </li>
+        </ul>
+        <ul *ngIf="confirmation == undefined" class="details">
+            <li *ngIf="modifyReservation"><strong>Your new reservation:</strong></li>
+            <li class="hotel-name">{{reservation.hotel.name}}</li>
+            <li>Room type: {{ reservation.hotelRoomRate.room_name}}</li>
+            <li>Check-in: {{reservation.check_in | date:'mediumDate'}}</li>
+            <li>Check-out: {{reservation.check_out | date:'mediumDate'}}</li>
+            <li>Total price: <strong>${{reservation.hotelRoomRate.total}} {{reservation.hotelRoomRate.currency}}</strong> Incl. GST</li>
+            <li>Guests: {{reservation.adult_count}}x adult<span *ngIf="reservation.adult_count > 1">s</span>
+                <span *ngIf="reservation.child_count > 0">, {{reservation.child_count}}x children</span>
+            </li>
+            <li *ngIf="reservation.promotional_code != ''">Promo Code: {{reservation.promotional_code}}</li>
+        </ul>
+        <span class="response-error" *ngIf="responseError.length > 0">
+            <i class="fa fa-times" aria-hidden="true"></i> {{responseError}}
+        </span>
+        <form (ngSubmit)="createReservation()" #reservationForm="ngForm">
+            <div *ngIf="confirmation == undefined">
+                <ul>
+                    <li>
+                        <h3>Your information</h3>
+                    </li>
+                    <li>
+                        <span>First name</span>
+                        <input [focus]="focus == 'first_name'" type="text" [(ngModel)]="reservation.first_name" required name="first_name"
+                               placeholder="First Name">
+                        <span class="error-msg" *ngIf="error.first_name != ''">{{error.first_name}}</span>
+                    </li>
+                    <li>
+                        <span>Last name</span>
+                        <input [focus]="focus == 'last_name'" type="text" [(ngModel)]="reservation.last_name" required name="last_name"
+                               placeholder="Last name">
+                        <span class="error-msg" *ngIf="error.last_name != ''">{{error.last_name}}</span>
+                    </li>
+                    <li>
+                        <span>Email</span>
+                        <input [focus]="focus == 'email'" type="email" [(ngModel)]="reservation.email" required name="email" placeholder="Email">
+                        <span class="error-msg" *ngIf="error.email != ''">{{error.email}}</span>
+                    </li>
+                    <li>
+                        <span>Mobile number</span>
+                        <input [focus]="focus == 'phone'" type="phone" [(ngModel)]="reservation.phone" required name="phone" placeholder="Phone">
+                        <span class="error-msg" *ngIf="error.phone != ''">{{error.phone}}</span>
+                    </li>
+                    <li>
+                        <span>Comments</span>
+                        <textarea [focus]="focus == 'comments'" [(ngModel)]="reservation.comments" name="comments"></textarea>
+                    </li>
+                    <li>
+                        <h3>Payment details</h3>
+                        <span class="note">{{reservation.hotelRoomRate.cancel_policy}}</span>
+                    </li>
+                    <li>
+                        <span>Card holder name</span>
+                        <input [focus]="focus == 'cc_holder_name'" type="text" [(ngModel)]="reservation.cc_holder_name" required name="cc_holder_name"
+                               placeholder="Card holder name">
+                        <span class="error-msg" *ngIf="error.cc_holder_name != ''">{{error.cc_holder_name}}</span>
+                    </li>
+                    <li>
+                        <span>Card type</span>
+                        <select [(ngModel)]="reservation.cc_type" name="cc_type">
+                            <option value="VI">Visa</option>
+                            <option value="MC">MasterCard</option>
+                            <option value="AX">American Express</option>
+                            <option value="DS">Discover</option>
+                            <option value="JC">JCB</option>
+                            <option value="DN">Diners</option>
+                        </select>
+                    </li>
+                    <li>
+                        <span>Card number</span>
+                        <input [focus]="focus == 'cc_number'" type="number" pattern="[0-9]{13,16}" [(ngModel)]="reservation.cc_number" required
+                               name="cc_number" placeholder="Card number">
+                        <span class="error-msg" *ngIf="error.cc_number != ''">{{error.cc_number}}</span>
+                    </li>
+                    <li>
+                        <span>Card expiry date</span>
+                        <select class="half" [(ngModel)]="reservation.cc_expiry_month" required name="cc_expiry_month">
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                        <select class="half" [(ngModel)]="reservation.cc_expiry_year" required name="cc_expiry_year">
+                            <option value="17">2017</option>
+                            <option value="18">2018</option>
+                            <option value="19">2019</option>
+                            <option value="20">2020</option>
+                            <option value="21">2021</option>
+                            <option value="22">2022</option>
+                        </select>
+                    </li>
+                    <li>
+                        <span>Card security code</span>
+                        <input [focus]="focus == 'cc_ccv'" class="half" type="text" [(ngModel)]="reservation.cc_ccv" required name="cc_ccv">
+                        <span class="error-msg" *ngIf="error.cc_ccv != ''">{{error.cc_ccv}}</span>
+                    </li>
+                    <li>
+                        <span class="terms-and-conditions">
+                            <input [focus]="focus == 'conditions_accepted'" type="checkbox" [(ngModel)]="reservation.conditions_accepted" required name="conditions_accepted">
+                            I have read and understood the rate policies and terms and conditions for my booking.
+                        </span>
+                        <span class="error-msg" *ngIf="error.conditions_accepted != ''">{{error.conditions_accepted}}</span>
+
+                    </li>
+                    <li class="buttons">
+                        <button type="submit">Book</button>
+                    </li>
+                </ul>
+            </div>
+        </form>
+        <checkout-confirmation *ngIf="confirmation != undefined" [confirmation]="confirmation"
+                               [reservation]="reservation"></checkout-confirmation>
+    </div>
+    <loader *ngIf="loader" [loadingText]="loadingText"></loader>
+</div>

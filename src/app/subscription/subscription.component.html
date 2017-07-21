@@ -1,0 +1,100 @@
+<div (click)="router.navigate([''])" class="logo">
+    <img src="../../../assets/img/logo_black.png">
+</div>
+<div *ngIf="!loading && !hasSubscribed">
+    <i (click)="router.navigate([''])" class="fa fa-arrow-left" aria-hidden="true"></i>
+    <h3>Subscribe to <span>eClub</span></h3>
+    <h4>Sign up today and benefit with:</h4>
+    <ul class="benefits">
+        <li>10%* off all future bookings</li>
+        <li>Exclusive eClub deals</li>
+        <li>Be in the know with our latest news, offers, promotions and competitions</li>
+        <li>Great rates at over 70 hotels across Australia, New Zealand &amp; Europe</li>
+    </ul>
+</div>
+<span class="response-error" *ngIf="responseError.length > 0">
+            <i class="fa fa-times" aria-hidden="true"></i> {{responseError}}
+        </span>
+<form *ngIf="!loading && !hasSubscribed" (ngSubmit)="subscribeUser()" #subscriptionForm="ngForm">
+    <ul>
+        <li>
+            <span>First name</span>
+            <input type="text" [(ngModel)]="subscription.first_name" (blur)="validate(['first_name'])"
+                   required
+                   name="first_name" placeholder="First Name">
+            <span class="error-msg" *ngIf="error.first_name != ''">{{error.first_name}}</span>
+        </li>
+        <li>
+            <span>Last name</span>
+            <input type="text" [(ngModel)]="subscription.last_name" (blur)="validate(['last_name'])" required
+                   name="last_name" placeholder="Last name">
+            <span class="error-msg" *ngIf="error.last_name != ''">{{error.last_name}}</span>
+        </li>
+        <li>
+            <span>Email</span>
+            <input type="email" [(ngModel)]="subscription.email" (blur)="validate(['email'])" required
+                   name="email" placeholder="Email">
+            <span class="error-msg" *ngIf="error.email != ''">{{error.email}}</span>
+        </li>
+        <li>
+            <span>Mobile number (optional)</span>
+            <input type="phone" [(ngModel)]="subscription.phone" (blur)="validate(['phone'])"
+                   required name="phone" placeholder="Mobile number">
+            <span class="error-msg" *ngIf="error.phone != ''">{{error.phone}}</span>
+        </li>
+        <li>
+            <span>Date of Birth (optional)</span>
+            <select class="third" [(ngModel)]="subscription.dob_day" name="dob_day">
+                <option value="">Day</option>
+                <option *ngFor="let d of selectOptionsDays" [value]="d < 10 ? ('0'+d).slice(-2) : d">
+                    {{d}}
+                </option>
+            </select>
+            <select class="third" [(ngModel)]="subscription.dob_month" name="dob_month">
+                <option value="">Month</option>
+                <option value="01">January</option>
+                <option value="02">February</option>
+                <option value="03">March</option>
+                <option value="04">April</option>
+                <option value="05">May</option>
+                <option value="06">June</option>
+                <option value="07">July</option>
+                <option value="08">August</option>
+                <option value="09">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+            <select class="third" [(ngModel)]="subscription.dob_year" name="dob_year">
+                <option value="">Year</option>
+                <option *ngFor="let y of selectOptionsYears" [value]="y">
+                    {{y}}
+                </option>
+            </select>
+        </li>
+        <li class="terms-and-conditions">
+            <input checked="true" [checked]="acceptedTerms == true" (change)="acceptTerms($event.target)"
+                   type="checkbox" #accept name="accept">
+            I accept the TFE Hotels <a
+                href="https://www.tfehotels.com/privacy-policy?utm_source=responsys&amp;utm_medium=emailsignup&amp;utm_content=privacypolicy&amp;utm_campaign=eClubSignup"
+                target="_blank">Privacy Policy</a> and the TFE Hotels <a
+                href="https://www.tfehotels.com/terms-conditions?utm_source=responsys&amp;utm_medium=emailsignup&amp;utm_content=termsandconditions&amp;utm_campaign=eClubSignup"
+                target="_blank">Terms &amp; Conditions</a>.
+        </li>
+        <li>
+            <button [disabled]="!acceptedTerms || !subscriptionForm.form.valid" type="submit" class="subscription">
+                Subscribe
+            </button>
+        </li>
+        <li>
+            <span class="flexible-rates">* Discount applies to Fully Flexible Rates.</span>
+        </li>
+    </ul>
+</form>
+<div *ngIf="!loading && hasSubscribed">
+    <div class="success">
+        <h3>A 10%* promotional code has been applied to your booking session!</h3>
+        <button class="back" (click)="router.navigate([''])">Make a reservation</button>
+    </div>
+</div>
+<loader (forceClose)="router.navigate([''])" *ngIf="loading" [loadingText]="loadingText"></loader>

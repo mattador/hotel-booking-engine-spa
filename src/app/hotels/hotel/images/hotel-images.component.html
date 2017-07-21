@@ -1,0 +1,14 @@
+<div class="hotel-image-slider" *ngIf="images.length > 0">
+    <swiper [config]="config">
+        <div class="swiper-wrapper">
+            <div *ngFor="let image of images" class="swiper-slide">
+                <img src="{{ CDN }}hotels/{{ image }}">
+            </div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <!-- If we need navigation buttons -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+    </swiper>
+</div>

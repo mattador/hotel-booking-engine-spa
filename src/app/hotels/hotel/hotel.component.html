@@ -1,0 +1,67 @@
+<top-navigator></top-navigator>
+<div class="hotel-view" *ngIf="hotel != null && hotel.rates.length > 0">
+    <ul class="breadcrump-top">
+        <li>
+            <div class="back" (click)="prevPage()">
+                <img src="../../../../assets/img/back.png">Back
+            </div>
+        </li>
+        <li>
+            <img class="logo" src="../../../../assets/img/logo_simple.png">
+        </li>
+    </ul>
+    <h3 class="hotel-name">{{hotel.name}}</h3>
+    <p><a  href="https://www.google.com.au/maps/place/{{hotel.name}}+{{hotel.country}}" target="_blank"><i aria-hidden="true" class="fa fa-map-marker"></i> {{hotel.address}}</a></p>
+    <ul class="room-types">
+        <li *ngFor="let rates of hotel.rates; let i = index;" [class.selected]="selectedRoomType == i" [class.collapsed]="selectedRoomCollapsed">
+            <div class="room-type">
+                <h5 (click)="selectRoomType(i)">{{rates[0].room_name}}</h5>
+                <div class="room-type-info">
+                    <hotel-images *ngIf="selectedRoomType == i" [images]="selectedRoomRate.room_images"></hotel-images>
+                    <ul class="rate-type-option">
+                        <li *ngFor="let rate of rates; let ii = index;" (click)="selectRoomTypeOption(ii)"
+                            [class.selected]="selectedRoomTypeOption == ii && selectedRoomType == i">
+                            <label>
+                                <input type="radio" name="rate" [checked]="selectedRoomTypeOption == ii && selectedRoomType == i">
+                                <i class="fa fa-check-circle"></i>
+                            </label>
+                            <div class="rate-type-total">
+                                ${{ (rate.total / rate.nights).toFixed(2) }} {{ rate.currency}} <span>/ night</span>
+                            </div>
+                            <span class="rate-type-name">{{rate.rate_name}}</span>
+                        </li>
+                    </ul>
+                    <div class="rate-meta">
+                        <div class="rate-description" [innerHtml]="selectedRoomRate.rate_description"></div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <button class="room-book-btn" (click)="initReservation()">Book Now</button>
+    <div class="summary-total">
+        Price for {{selectedRoomRate.nights}} night<span *ngIf="selectedRoomRate.nights > 1">s</span>:
+        ${{selectedRoomRate.total}} {{ selectedRoomRate.currency}}
+    </div>
+    <div class="accordian">
+        <accordion [showArrows]="true">
+            <accordion-group heading="Booking Policy" [isOpened]="true">
+                <p>{{selectedRoomRate.cancel_policy}}</p>
+            </accordion-group>
+        </accordion>
+        <accordion *ngFor="let features of selectedRoomRate.room_description" [showArrows]="true">
+            <accordion-group heading="{{features.title}}" [isOpened]="true">
+                <div [innerHTML]="features.html"></div>
+            </accordion-group>
+        </accordion>
+        <accordion [showArrows]="true">
+            <accordion-group heading="Children" [isOpened]="true">
+                <p>
+                    Children under 12 stay free when sharing existing bedding.
+                    Additional bedding is available upon request and subject to an additional fee.
+                    Please contact the hotel for further information.
+                </p>
+            </accordion-group>
+        </accordion>
+    </div>
+</div>

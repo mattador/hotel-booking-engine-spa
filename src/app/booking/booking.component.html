@@ -1,0 +1,94 @@
+<div class="reservation booking">
+    <div (click)="router.navigate([''])" class="logo">
+        <img src="../../../assets/img/logo_black.png">
+    </div>
+    <i (click)="router.navigate([''])" class="fa fa-arrow-left" aria-hidden="true"></i>
+    <span class="response-error" *ngIf="responseError != ''">
+        <i class="fa fa-times" aria-hidden="true"></i> {{responseError}}
+    </span>
+    <div *ngIf="reservation != undefined && !loader">
+        <h3>Your Booking Information</h3>
+        <ul class="details">
+            <li>
+                <h4 class="title">Confirmation code:</h4>
+                <p>{{ reservation.api_confirmation_code}}</p>
+            </li>
+            <li>
+                <h4 class="title">Hotel and room type:</h4>
+                <p>{{reservation.name}}<br>
+                    1 x {{reservation.room_type_name}}</p>
+            </li>
+            <li>
+                <h4 class="title">Address:</h4>
+                <p>{{reservation.address}}</p>
+            </li>
+            <li>
+                <h4 class="title">Check in date:</h4>
+                <p>{{reservation.check_in | date:"dd"}} {{reservation.check_in | date:"MMM"}}, {{reservation.check_in | date:"y" }}</p>
+            </li>
+            <li>
+                <h4 class="title">Check out date:</h4>
+                <p>{{reservation.check_out | date:"dd"}} {{reservation.check_out | date:"MMM"}}, {{reservation.check_out | date:"y" }}</p>
+            </li>
+            <li>
+                <h4 class="title">Guests:</h4>
+                <p>
+                    <span>{{reservation.adult_count}}x adults</span>
+                    <span *ngIf="reservation.child_count > 0">, {{reservation.child_count}}x Children</span>
+                </p>
+            </li>
+            <!--<li>
+                <h4 class="title">Status:</h4>
+                <p>{{reservation.status}}</p>
+            </li>-->
+            <li>
+                <h4 class="title">Total:</h4>
+                <p>${{reservation.total}} {{reservation.currency}} </p>
+            </li>
+            <li>
+                <h4 class="title">Information:</h4>
+                <p>{{reservation.description}}</p>
+            </li>
+            <!--<li>
+                <hotel-images [images]="reservation.images"></hotel-images>
+            </li>-->
+            <li>
+                <h4 class="title">Booking Policy:</h4>
+                <p>{{reservation.cancelation_terms}}</p>
+            </li>
+            <li class="buttons">
+                <button [class.disabled]="!reservation.can_cancel" [disabled]="!reservation.can_cancel" (click)="modifyReservation()">Modify Reservation</button>
+                <button [class.disabled]="!reservation.can_cancel" [disabled]="!reservation.can_cancel"
+                        (click)="cancelReservation()">Cancel Booking<span *ngIf="!reservation.can_cancel">*</span>
+                </button>
+                <span class="no-cancel" *ngIf="!reservation.can_cancel">*This booking does meet not the criteria for cancellation according to the dates of stay and/or the booking policy of the reservation.</span>
+            </li>
+        </ul>
+    </div>
+    <div *ngIf="reservation == undefined">
+        <h3>Manage Booking</h3>
+        <span class="canceled" *ngIf="isCanceled">Your booking has been cancelled.</span>
+        <form (ngSubmit)="getReservation()" #reservationForm="ngForm">
+            <ul>
+                <li>
+                    <span>Confirmation number</span>
+                    <input type="text" [(ngModel)]="search.api_confirmation_code" #api_confirmation_code
+                           (blur)="validate('api_confirmation_code')" required name="api_confirmation_code"
+                           placeholder="Confirmation number">
+                    <span class="error-msg"
+                          *ngIf="error.api_confirmation_code != ''">{{error.api_confirmation_code}}</span>
+                </li>
+                <li>
+                    <span>Last name</span>
+                    <input type="text" [(ngModel)]="search.last_name" (blur)="validate(['last_name'])" required
+                           name="last_name" placeholder="Last name">
+                    <span class="error-msg" *ngIf="error.last_name != ''">{{error.last_name}}</span>
+                </li>
+                <li>
+                    <button [disabled]="!reservationForm.valid" type="submit">Search booking</button>
+                </li>
+            </ul>
+        </form>
+    </div>
+    <loader (forceClose)="loader == false" *ngIf="loader" [loadingText]="loadingText"></loader>
+</div>

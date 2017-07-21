@@ -1,0 +1,46 @@
+<top-navigator></top-navigator>
+<div>
+    <ul class="breadcrump-top">
+        <li>
+            <div class="back" [routerLink]="['']">
+                <img src="../../../assets/img/back.png">Back
+            </div>
+        </li>
+        <li>
+            <img class="logo" src="../../../assets/img/logo_simple.png">
+        </li>
+    </ul>
+    <search-nav [(showFilters)]="showFilters" [(criteria)]="criteria" (onSubmitted)="loadResults()"></search-nav>
+</div>
+
+<div *ngIf="hotels.length > 0" class="list">
+    <div class="list-summary">
+        Showing <strong>{{hotels.length}} {{(hotels.length == 1)? 'result':'results'}}</strong>
+        <select (change)="onChange($event.target.value)">
+            <option value="cheapest_rate_total">Lowest price</option>
+            <option value="popularity">Most popular</option>
+            <option value="distance">Closest to city</option>
+        </select>
+    </div>
+    <ul class="list">
+        <li *ngFor="let hotel of hotels | filterHotels; let i = index" [attr.data-index]="i">
+            <div *ngIf="i == 0" class="topHotel">{{topHotelMessage()}}</div>
+            <div class="row">
+                <div class="hotel-image" [style.background-image]="firstImage(hotel.images)"></div>
+                <div class="hotel-info">
+                    <h3 class="hotel-name" (click)="setActiveHotel(hotel)">{{hotel.name}}</h3>
+                    <a class="hotel-location" href="https://www.google.com.au/maps/place/{{hotel.name}}+{{hotel.country}}" target="_blank"><i class="fa fa-map-marker" aria-hidden="true"></i> {{hotel.address}} <div>{{hotel.distance}} km from city center</div></a>
+                    <strong>Rates from</strong>
+                    <em>${{ (hotel.cheapest_rate_total / hotel.nights).toFixed(2) }}<span>/night</span></em>
+                    <button (click)="setActiveHotel(hotel, criteria)">VIEW DEALS <i class="fa fa-angle-right" aria-hidden="true"></i></button>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+<div *ngIf="hotels.length == 0 && !loading">
+    <h3 class="not-found">There were no availabilities for your search, try changing your dates or number of guests</h3>
+    <button class="back" [routerLink]="['']">Modify dates</button>
+</div>
+<loader *ngIf="loading" [loadingText]="loadingText"></loader>
+<router-outlet></router-outlet>
